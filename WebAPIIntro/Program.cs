@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using WebAPIIntro.Data;
 using WebAPIIntro.Controllers;
+using WebAPIIntro.Services;
 
 var builder = WebApplication.CreateBuilder(args); // uygulama creat edildi�i
 
@@ -16,6 +17,16 @@ builder.Services.AddDbContext<ApplicationContext>(opt =>
 {
   opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+
+// nerede ILogger çağırırsam DbLogger instance al
+// register işlemi
+// bağımlılklar ve bağımlıkların instance alma şekilleri tek bir dosyadan yönetiliyor.
+builder.Services.AddTransient<WebAPIIntro.Services.ILogger, DbLogger>();
+builder.Services.AddTransient<ConsoleLogger>();
+
+
+// IServiceCollection Interface üzerinden net core kendi IoC mekanizmasına sahip.
 
 //builder.Services.AddDbContext<ApplicationContext>(opt =>
 //{
@@ -50,6 +61,8 @@ var app = builder.Build(); // �al��an uygulama instance ile uygulama reque
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+ 
+
   app.UseSwagger(); // next()
   app.UseSwaggerUI(); // next()
 }

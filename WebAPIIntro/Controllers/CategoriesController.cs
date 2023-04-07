@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Logging;
 using Microsoft.EntityFrameworkCore;
 using WebAPIIntro.Data;
 using WebAPIIntro.Data.Entities;
@@ -18,13 +19,17 @@ namespace WebAPIIntro.Controllers
     //private readonly ApplicationContext _context =  new ApplicationContext();
 
     private readonly ApplicationContext _context;
-    public CategoriesController(ApplicationContext context) // dependency injection ile instance program dosyasında AddDbContext ile sistene register edilip bütun uygulama genelinde instance istenen yerlerde contructor'a parametre olarak geçilebilir.
+    private readonly WebAPIIntro.Services.ConsoleLogger _consoleLogger;
+    public CategoriesController(ApplicationContext context, WebAPIIntro.Services.ConsoleLogger consoleLogger) // dependency injection ile instance program dosyasında AddDbContext ile sistene register edilip bütun uygulama genelinde instance istenen yerlerde contructor'a parametre olarak geçilebilir.
     {
 
       //using (ApplicationContext c = new ApplicationContext())
       //{
 
       //}
+
+      // referansı elimizdeki nesneye eşitleedik.
+      _consoleLogger = consoleLogger;
 
       _context = context;
     }
@@ -33,6 +38,9 @@ namespace WebAPIIntro.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
     {
+      _consoleLogger.Log("console");
+
+
       if (_context.Categories == null)
       {
         return NotFound();
